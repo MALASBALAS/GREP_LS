@@ -27,4 +27,3 @@ PSP es programación.
 ```
 
 Álvaro Balas Jiménez
-# GREP

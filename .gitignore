@@ -1,0 +1,27 @@
+# Compiled class files
+bin/
+
+# VS Code settings
+.vscode/
+
+# Dependency libraries
+lib/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Java specific
+*.class
+*.jar
+
+# Logs
+*.log
+
+# IDE files
+*.iml
+.idea/
+
+# Misc
+*.swp
+*~
