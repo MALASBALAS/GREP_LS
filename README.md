@@ -3,7 +3,8 @@
 
 Repositorio en GitHub: [https://github.com/MALASBALAS/GREP_LS](https://github.com/MALASBALAS/GREP_LS)
 
-Programa *Java* que usa `grep -i psp` para filtrar líneas que contienen "psp" (sin distinguir mayúsculas/minúsculas) desde un array de cadenas. Envía las líneas al proceso `grep` y muestra las coincidencias o un mensaje si no hay ninguna.
+Programa Java que usa grep -i a para filtrar líneas que contienen la letra "a" (sin distinguir mayúsculas/minúsculas).
+Lanza un proceso ls y pasa su salida a grep, mostrando únicamente las coincidencias.
 
 **Claves:**
 
@@ -19,17 +20,44 @@ Preaparado para modificar las siguientes constantes en el código:
 - `ATRIBUTO2`: Palabra que se busca en las líneas de texto.
 - `COMANDO`: Array con el comando y argumentos que se pasan al proceso `grep` (puedes modificar el orden o añadir más argumentos si lo necesitas).
 
+## Dónde editar la búsqueda
+
+Las constantes para personalizar el comportamiento están en:
+
+- `src/main/java/xyz/balbe/Grep.java`
+  - `SEARCH_TERM` — texto/ palabra a buscar (por ejemplo `"a"` o `"PSP"`).
+  - Constantes reales en el código:
+    - `SEARCH_TERM` — texto/palabra por defecto a buscar (valor por defecto: `"a"`).
+    - `IGNORAR_MAYUSCULAS` — si es `true`, se añade `-i` al comando `grep` para ignorar mayúsculas/minúsculas (valor por defecto: `true`).
+    - `MSG_ERROR` — mensaje que se muestra en stderr si ocurre un error al ejecutar `grep`.
+
+- `src/main/java/xyz/balbe/LS.java`
+  - `PATH` — ruta que lista `ls` por defecto (ahora `/home/`).
+  - Constantes reales en el código:
+    - `PATH` — ruta listada por `ls` (valor por defecto: `/home/`).
+    - `LS_COMMAND` — comando completo construido a partir de `PATH` (ej. `"ls /home/"`).
+    - `SHELL` — shell que se usa para ejecutar el comando (valor por defecto: `"bash"`).
+    - `SHELL_PARAM` — parámetro usado para pasar el comando al shell (valor por defecto: `"-c"`).
+    - `MSG_ERROR` — mensaje que se muestra en stderr si ocurre un error al ejecutar `ls`.
+
+- `src/main/java/xyz/balbe/Main.java`
+  - `CLASS_PATH` — classpath que se pasa a los subprocesos Java.
+  - Constantes reales en el código:
+    - `JAVA_CMD` — comando para invocar Java (valor por defecto: `"java"`).
+    - `CLASS_PATH` — classpath usado para ejecutar las clases Java desde procesos hijos (valor por defecto: `"target/classes:target/test-classes:./src:."`).
+    - `LS_CLASS` — nombre completo (FQCN) de la clase que lista el directorio (`"xyz.balbe.LS"`).
+    - `GREP_CLASS` — nombre completo (FQCN) de la clase que ejecuta `grep` (`"xyz.balbe.Grep"`).
+    - Nota: `Main` lanza `LS` como proceso Java, recoge toda su salida y la pasa por stdin a `Grep` (también proceso Java).
+
 ## Ejemplo de salida
+
+Al listar el directorio */home* (ruta por defecto), la salida debe incluir todas las líneas que grep encuentre al buscar la letra *"a"*.
 
 ```text
 Success!
-Me gusta PSP y java
-PSP se programa en java
-y se programa de forma concurrente en PSP
-PSP es programación.
+debian
+alvaro
 ```
-
-Álvaro Balas Jiménez
 
 ## Cómo ejecutar
 
@@ -47,27 +75,4 @@ mvn -q -DskipTests -f pom.xml package
 java -cp target/classes:target/test-classes:. xyz.balbe.Main
 ```
 
-## Dónde editar la búsqueda
-
-Las constantes para personalizar el comportamiento están en:
-
-- `src/main/java/xyz/balbe/Grep.java`
-  - `SEARCH_TERM` — texto/ palabra a buscar (por ejemplo `"a"` o `"PSP"`).
-  - `MATCH_WHOLE_WORD` — true para buscar palabra completa, false para subcadena.
-  - `CASE_INSENSITIVE` — true para ignorar mayúsculas/minúsculas.
-
-- `src/main/java/xyz/balbe/LS.java`
-  - `PATH` — ruta que lista `ls` por defecto (ahora `/home/`).
-
-- `src/main/java/xyz/balbe/Main.java`
-  - `CLASS_PATH` — classpath que se pasa a los subprocesos Java.
-
-## Checklist para entrega (objetivo: nota 9)
-
-1. Funcionamiento: el programa lanza `LS` y `Grep` como procesos separados y muestra por consola las líneas que contienen la búsqueda (OK).
-2. Tests: JUnit 5 está configurado y los tests del repositorio pasan (OK).
-3. Código limpio: constantes configurables y breve documentación incluida (mejorable).
-4. Robustez: mejorar manejo de errores y cerrar/executor shutdown ordenado.
-5. Opcional (para 9+): permitir pasar `SEARCH_TERM` desde `Main` o línea de comandos; usar `Pattern` con \b para mejor detección de palabras; añadir tests que cubran edge-cases.
-
-Si quieres, implemento los puntos 4 y 5 (rápido) y añado tests nuevos para subir la nota.
+Álvaro Balas Jiménez
